@@ -3,9 +3,66 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+	<title>Reminder for telegram (напоминалка для телеграма)</title>
 </head>
 <body>
-	
+	<h1>Reminder for telegram (напоминалка для телеграма)</h1>
+
+	<p>Attention! Only works with open page</p>
+
+	<p>
+		<input type="text" name="" id="InputApi" placeholder="Telegram bot api key">
+	</p>
+	<p>
+		<input type="text" name="" id="InputChatID" placeholder="Chat id">
+	</p>
+	<p>
+		<input type="text" name="" id="InputMessage" placeholder="Message">
+	</p>
+	<p>
+		<input type="text" name="" id="InputInterval" placeholder="Interval (minutes)">
+	</p>
+	<p>
+		<input type="text" name="" id="InputCount" placeholder="Count">
+	</p>
+	<p>
+		<button type="button" id="Button">Start</button>
+	</p>
+
+	<script>
+		;(() => {
+			const $InputApi = document.getElementById('InputApi');
+			const $InputChatID = document.getElementById('InputChatID');
+			const $InputMessage = document.getElementById('InputMessage');
+			const $InputInterval = document.getElementById('InputInterval');
+			const $InputCount = document.getElementById('InputCount');
+			const $Button = document.getElementById('Button');
+
+			let intervalID = 0;
+
+			$Button.addEventListener('click', (event) => {
+				event.preventDefault();
+				if (intervalID) {
+					clearInterval(intervalID);
+					intervalID = 0;
+					$Button.innerHTML = 'Start';
+					return;
+				}
+				const interval = parseInt($InputInterval.value);
+				const message = $InputMessage.value;
+				const api = $InputApi.value;
+				const chatID = $InputChatID.value;
+
+				function tick() {
+					fetch(`https://api.telegram.org/bot${ api }/sendMessage?chat_id=${ chatID }&text=${ encodeURI(message) }`)
+						.then(res => res.json())
+						.then(console.log);
+				}
+				intervalID = setInterval(tick, interval * 60 * 1000);
+				tick();
+				$Button.innerHTML = 'Stop';
+			});
+		})();
+	</script>
 </body>
 </html>
