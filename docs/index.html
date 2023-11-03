@@ -39,24 +39,35 @@
 			const $Button = document.getElementById('Button');
 
 			let intervalID = 0;
+			let index = 0;
+
+			function stop() {
+				clearInterval(intervalID);
+				intervalID = 0;
+				index = 0;
+				$Button.innerHTML = 'Start';
+			}
 
 			$Button.addEventListener('click', (event) => {
 				event.preventDefault();
 				if (intervalID) {
-					clearInterval(intervalID);
-					intervalID = 0;
-					$Button.innerHTML = 'Start';
-					return;
+					return stop();
 				}
+
 				const interval = parseInt($InputInterval.value);
 				const message = $InputMessage.value;
 				const api = $InputApi.value;
 				const chatID = $InputChatID.value;
+				const count = $InputCount.value;
 
 				function tick() {
 					fetch(`https://api.telegram.org/bot${ api }/sendMessage?chat_id=${ chatID }&text=${ encodeURI(message) }`)
 						.then(res => res.json())
 						.then(console.log);
+					index++;
+					if (index > count) {
+						stop();
+					}
 				}
 				intervalID = setInterval(tick, interval * 60 * 1000);
 				tick();
