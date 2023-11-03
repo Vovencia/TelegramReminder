@@ -39,12 +39,12 @@
 			const $Button = document.getElementById('Button');
 
 			let intervalID = 0;
-			let index = 0;
+			let index = -1;
 
 			function stop() {
 				clearInterval(intervalID);
 				intervalID = 0;
-				index = 0;
+				index = -1;
 				$Button.innerHTML = 'Start';
 			}
 
@@ -53,7 +53,7 @@
 				if (intervalID) {
 					return stop();
 				}
-
+				stop();
 				const interval = parseInt($InputInterval.value);
 				const message = $InputMessage.value;
 				const api = $InputApi.value;
@@ -65,7 +65,7 @@
 						.then(res => res.json())
 						.then(console.log);
 					index++;
-					if (index > count) {
+					if (index >= count) {
 						stop();
 					}
 				}
